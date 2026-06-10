@@ -1,0 +1,89 @@
+KIGALI SMART PARKING SYSTEM - MANUAL TEST SCENARIOS
+===================================================
+
+Use these steps in the running program to demonstrate all required features.
+
+TEST 1: Slot Configuration (Task 1)
+-------------------------------------
+1. Choose option 11 -> Load Sample Test Data
+2. Choose option 2  -> View All Parking Slots
+   Expected: 7 slots across Zones A-D (Motorcycle, Car, Truck)
+3. Choose option 1  -> Add a custom slot
+   Slot ID : X-99
+   Type    : 2 (Car)
+   Zone    : Zone E
+4. Choose option 2  -> Confirm X-99 appears in the list
+
+TEST 2: Vehicle Entry (Task 2)
+------------------------------
+1. Choose option 3 -> Register Vehicle Entry
+   Plate : RAC101A
+   Type  : 2 (Car)
+   Expected: Allocated to an available Car slot (e.g. C-01)
+2. Choose option 3 -> Try same plate again (RAC101A)
+   Expected: Error - vehicle already parked
+3. Choose option 7 -> View Parked Vehicles
+   Expected: RAC101A listed with entry time and slot
+4. Choose option 6 -> View Available Slots
+   Expected: One fewer Car slot available
+
+TEST 3: No Slot Available
+-------------------------
+1. Park cars until all Car slots are occupied:
+   Plates: RAC102A, RAC103A, RAC104A (after RAC101A)
+2. Choose option 3 -> Register another Car (RAC105A)
+   Expected: Graceful error - no suitable slot available
+
+TEST 4: Fee Calculation (Task 3)
+--------------------------------
+1. Choose option 10 -> View Current Rates
+   Motorcycle: 500 | Car: 1000 | Truck: 2000 RWF/hour
+2. Choose option 3 -> Register Motorcycle MOTO01
+3. Wait at least 1 minute (or longer to test partial-hour billing)
+4. Choose option 4 -> Exit MOTO01
+   Expected: Billed hours use ceiling rule; fee = billedHours x current rate
+5. Choose option 8 -> View history; rate applied is stored in the record
+
+TEST 5: Price Update Without Affecting History (Task 3)
+-------------------------------------------------------
+1. Choose option 3 -> Register Car RAC200B
+2. Choose option 4 -> Exit RAC200B immediately
+   Note the applied rate (1000 RWF/hour) and fee in history
+3. Choose option 5 -> Update Car rate to 1500
+4. Choose option 3 -> Register Car RAC201B
+5. Choose option 4 -> Exit RAC201B
+   Expected: New exit uses 1500 RWF/hour
+6. Choose option 8 -> View history
+   Expected: RAC200B still shows 1000 RWF/hour; RAC201B shows 1500
+
+TEST 6: Vehicle Exit and Slot Release (Task 4)
+----------------------------------------------
+1. Choose option 3 -> Register Truck TRK500Z
+2. Choose option 6 -> Available Slots (one fewer Truck slot)
+3. Choose option 4 -> Exit TRK500Z
+   Expected: Fee displayed, slot released
+4. Choose option 6 -> Truck slot available again
+5. Choose option 8 -> Transaction stored with entry, exit, duration, fee
+
+TEST 7: Operational Reports
+-----------------------------
+1. Choose option 7 -> Parked Vehicles (active sessions only)
+2. Choose option 8 -> Vehicle History (all completed transactions)
+3. Choose option 9 -> Daily Revenue
+   Enter today's date as YYYY-MM-DD, or press Enter for all revenue
+   Expected: Transaction list and total revenue in RWF
+
+TEST 8: Input Validation
+------------------------
+1. Choose option 1 -> Add slot with empty ID
+   Expected: Error message
+2. Choose option 1 -> Add duplicate Slot ID
+   Expected: Error - slot already exists
+3. Choose option 4 -> Exit unknown plate UNKNOWN
+   Expected: Error - vehicle not currently parked
+4. Choose option 5 -> Update rate to 0 or negative
+   Expected: Error - rate must be positive
+
+QUICK DEMO SEQUENCE (minimum)
+-----------------------------
+11 -> 3 (RAC101A, Car) -> 7 -> 4 (RAC101A) -> 8 -> 5 (Car, 1500) -> 10 -> 0
