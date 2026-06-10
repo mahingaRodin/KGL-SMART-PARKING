@@ -1,0 +1,24 @@
+flowchart TD
+    START([Option 4: Register Vehicle Exit]) --> READ[Read plate number]
+    READ --> V1{Plate number empty?}
+    V1 -->|Yes| E1[Error: Plate cannot be empty]
+    V1 -->|No| V2{Plate in activeVehicles?}
+
+    V2 -->|No| E2[Error: Vehicle not currently parked]
+    V2 -->|Yes| GET[Retrieve ParkedVehicle record]
+
+    GET --> EXIT_TIME[exitTime = system_clock::now]
+    EXIT_TIME --> DUR[durationMinutes = exitTime - entryTime]
+    DUR --> RATE[hourlyRate = hourlyRates at vehicle type]
+    RATE --> BILL[billedHours = FeeCalculator::calculateBilledHours]
+    BILL --> FEE[totalFee = billedHours x hourlyRate]
+
+    FEE --> RELEASE[Set allocated slot status = Available]
+    RELEASE --> BUILD[Create ParkingTransaction<br/>stores hourlyRateApplied + totalFee]
+    BUILD --> PUSH[Append to transactionHistory vector]
+    PUSH --> ERASE[Remove plate from activeVehicles]
+    ERASE --> SHOW[Display exit summary and fee]
+
+    E1 --> END([Return to menu])
+    E2 --> END
+    SHOW --> END

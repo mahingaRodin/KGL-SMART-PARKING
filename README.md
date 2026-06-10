@@ -81,4 +81,13 @@ FeeCalculator.h       - Fee calculation strategy
 Displayable.h         - Abstract display interface
 enums.h               - Vehicle type and slot status helpers
 test_input.txt        - Manual test scenarios
+docs/                 - System flow docs, file reference, and Mermaid diagrams
 ```
+
+## Documentation
+
+Full technical documentation is in the [`docs/`](docs/) folder:
+
+- [System Flow](docs/system-flow.md) — process flows and task mapping
+- [File Reference](docs/file-reference.md) — purpose of every project file
+- [Diagrams](docs/diagrams/) — architecture, class, entry/exit, and data structure diagrams

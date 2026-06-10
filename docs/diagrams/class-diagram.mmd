@@ -1,0 +1,85 @@
+classDiagram
+    class Displayable {
+        <<interface>>
+        +display() void
+    }
+
+    class ParkingSlot {
+        -slotId: string
+        -supportedType: VehicleType
+        -zone: string
+        -status: SlotStatus
+        +getSlotId() string
+        +getSupportedType() VehicleType
+        +getZone() string
+        +getStatus() SlotStatus
+        +setStatus(SlotStatus) void
+        +isAvailable() bool
+        +supports(VehicleType) bool
+        +display() void
+    }
+
+    class ParkedVehicle {
+        -plateNumber: string
+        -vehicleType: VehicleType
+        -entryTime: TimePoint
+        -allocatedSlotId: string
+        +getPlateNumber() string
+        +getVehicleType() VehicleType
+        +getEntryTime() TimePoint
+        +getAllocatedSlotId() string
+        +display() void
+        +formatTime(TimePoint)$ string
+    }
+
+    class ParkingTransaction {
+        -plateNumber: string
+        -vehicleType: VehicleType
+        -slotId: string
+        -entryTime: TimePoint
+        -exitTime: TimePoint
+        -durationMinutes: long long
+        -billedHours: int
+        -hourlyRateApplied: int
+        -totalFee: int
+        +getExitDate() string
+        +display() void
+    }
+
+    class FeeCalculator {
+        <<abstract>>
+        +calculateBilledHours(minutes) int
+        +calculateFee(minutes, rate) int
+    }
+
+    class StandardFeeCalculator {
+        +calculateBilledHours(minutes) int
+        +calculateFee(minutes, rate) int
+    }
+
+    class ParkingSystem {
+        -slots: unordered_map
+        -activeVehicles: unordered_map
+        -transactionHistory: vector
+        -hourlyRates: unordered_map
+        -feeCalculator: unique_ptr~FeeCalculator~
+        +addSlot() bool
+        +registerEntry() bool
+        +registerExit() bool
+        +updateHourlyRate() bool
+        +displayAllSlots() void
+        +displayAvailableSlots() void
+        +displayParkedVehicles() void
+        +displayTransactionHistory() void
+        +displayDailyRevenue() void
+        -findAvailableSlot() string
+    }
+
+    Displayable <|-- ParkingSlot
+    Displayable <|-- ParkedVehicle
+    Displayable <|-- ParkingTransaction
+    FeeCalculator <|-- StandardFeeCalculator
+    ParkingSystem --> ParkingSlot : manages
+    ParkingSystem --> ParkedVehicle : manages
+    ParkingSystem --> ParkingTransaction : archives
+    ParkingSystem --> FeeCalculator : uses

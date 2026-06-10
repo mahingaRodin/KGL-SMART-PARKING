@@ -1,0 +1,59 @@
+flowchart TB
+    subgraph User["User / Operator"]
+        OP[Console Operator]
+    end
+
+    subgraph Presentation["Presentation Layer"]
+        MAIN[main.cpp]
+        MENU[Menu Loop]
+        INPUT[Input Handlers<br/>readInt / readLine / readVehicleType]
+        HANDLERS[Action Handlers<br/>handleAddSlot / handleVehicleEntry / etc.]
+    end
+
+    subgraph Business["Business Logic Layer"]
+        PS[ParkingSystem]
+        FC[FeeCalculator]
+        SFC[StandardFeeCalculator]
+        FC --> SFC
+        PS --> FC
+    end
+
+    subgraph Models["Domain Models"]
+        SLOT[ParkingSlot]
+        VEH[ParkedVehicle]
+        TXN[ParkingTransaction]
+        DISP[Displayable Interface]
+        DISP -.-> SLOT
+        DISP -.-> VEH
+        DISP -.-> TXN
+    end
+
+    subgraph Data["In-Memory Data Stores"]
+        SM[("slots<br/>unordered_map&lt;string, ParkingSlot&gt;")]
+        AV[("activeVehicles<br/>unordered_map&lt;string, ParkedVehicle&gt;")]
+        TH[("transactionHistory<br/>vector&lt;ParkingTransaction&gt;")]
+        HR[("hourlyRates<br/>unordered_map&lt;VehicleType, int&gt;")]
+    end
+
+    subgraph Shared["Shared Utilities"]
+        ENUMS[enums.h<br/>VehicleType / SlotStatus]
+    end
+
+    OP <-->|keyboard I/O| MAIN
+    MAIN --> MENU
+    MENU --> INPUT
+    INPUT --> HANDLERS
+    HANDLERS --> PS
+
+    PS --> SM
+    PS --> AV
+    PS --> TH
+    PS --> HR
+    PS --> SLOT
+    PS --> VEH
+    PS --> TXN
+
+    SLOT --> ENUMS
+    VEH --> ENUMS
+    TXN --> ENUMS
+    PS --> ENUMS

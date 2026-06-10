@@ -1,0 +1,31 @@
+flowchart TD
+    START([Option 3: Register Vehicle Entry]) --> READ[Read plate number and vehicle type]
+    READ --> V1{Plate number empty?}
+    V1 -->|Yes| E1[Error: Plate cannot be empty]
+    V1 -->|No| V2{Plate exists in activeVehicles map?}
+
+    V2 -->|Yes| E2[Error: Vehicle already parked]
+    V2 -->|No| SEARCH[findAvailableSlot vehicleType]
+
+    SEARCH --> LOOP[Iterate all slots in slots map]
+    LOOP --> CHECK1{Status = Available?}
+    CHECK1 -->|No| NEXT[Next slot]
+    CHECK1 -->|Yes| CHECK2{supportedType = vehicleType?}
+    CHECK2 -->|No| NEXT
+    CHECK2 -->|Yes| FOUND[Return matching Slot ID]
+    NEXT --> LOOP
+    LOOP -->|No more slots| NONE[Return empty string]
+
+    FOUND --> ALLOC[Lookup slot in slots map]
+    NONE --> E3[Error: No suitable slot available]
+
+    ALLOC --> OCCUPY[Set slot status = Occupied]
+    OCCUPY --> TIME[Record entryTime = system_clock::now]
+    TIME --> CREATE[Create ParkedVehicle object]
+    CREATE --> INSERT[Insert into activeVehicles<br/>key = plateNumber]
+    INSERT --> SUCCESS[Display confirmation<br/>slot ID and entry time]
+
+    E1 --> END([Return to menu])
+    E2 --> END
+    E3 --> END
+    SUCCESS --> END

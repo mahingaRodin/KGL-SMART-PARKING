@@ -1,0 +1,33 @@
+flowchart LR
+    subgraph SlotsStore["slots — unordered_map&lt;string, ParkingSlot&gt;"]
+        S1["Key: Slot ID<br/>Value: ParkingSlot object"]
+        S_OPS["Operations:<br/>• addSlot → emplace O(1)<br/>• find slot → find O(1)<br/>• update status → direct access O(1)<br/>• reports → traverse O(n)"]
+    end
+
+    subgraph ActiveStore["activeVehicles — unordered_map&lt;string, ParkedVehicle&gt;"]
+        A1["Key: Plate Number<br/>Value: ParkedVehicle object"]
+        A_OPS["Operations:<br/>• entry → emplace O(1)<br/>• duplicate check → find O(1)<br/>• exit lookup → find O(1)<br/>• exit remove → erase O(1)<br/>• report → traverse O(n)"]
+    end
+
+    subgraph HistoryStore["transactionHistory — vector&lt;ParkingTransaction&gt;"]
+        H1["Indexed list of completed sessions"]
+        H_OPS["Operations:<br/>• exit archive → push_back O(1)<br/>• history report → traverse O(n)<br/>• daily revenue → filter + sum O(n)"]
+    end
+
+    subgraph RatesStore["hourlyRates — unordered_map&lt;VehicleType, int&gt;"]
+        R1["Key: VehicleType<br/>Value: RWF per hour"]
+        R_OPS["Operations:<br/>• init defaults → assign O(1)<br/>• update rate → assign O(1)<br/>• fee lookup at exit → find O(1)"]
+    end
+
+    ENTRY[Vehicle Entry] --> SlotsStore
+    ENTRY --> ActiveStore
+
+    EXIT[Vehicle Exit] --> ActiveStore
+    EXIT --> SlotsStore
+    EXIT --> HistoryStore
+    EXIT --> RatesStore
+
+    REPORT[Reports] --> SlotsStore
+    REPORT --> ActiveStore
+    REPORT --> HistoryStore
+    REPORT --> RatesStore

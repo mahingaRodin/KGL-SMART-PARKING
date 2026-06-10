@@ -1,0 +1,32 @@
+flowchart TD
+    START([Application Start]) --> WELCOME[Display Welcome Message]
+    WELCOME --> MENU[Display Main Menu]
+
+    MENU --> CHOICE{Read Menu Choice}
+
+    CHOICE -->|1| H1[handleAddSlot]
+    CHOICE -->|2| H2[displayAllSlots]
+    CHOICE -->|3| H3[handleVehicleEntry]
+    CHOICE -->|4| H4[handleVehicleExit]
+    CHOICE -->|5| H5[handleUpdateRates]
+    CHOICE -->|6| H6[displayAvailableSlots]
+    CHOICE -->|7| H7[displayParkedVehicles]
+    CHOICE -->|8| H8[displayTransactionHistory]
+    CHOICE -->|9| H9[handleDailyRevenue]
+    CHOICE -->|10| H10[displayCurrentRates]
+    CHOICE -->|11| H11[loadSampleData]
+    CHOICE -->|0| EXIT([Exit Program])
+    CHOICE -->|invalid| ERR[Show Invalid Option Message]
+
+    H1 --> MENU
+    H2 --> MENU
+    H3 --> MENU
+    H4 --> MENU
+    H5 --> MENU
+    H6 --> MENU
+    H7 --> MENU
+    H8 --> MENU
+    H9 --> MENU
+    H10 --> MENU
+    H11 --> MENU
+    ERR --> MENU
